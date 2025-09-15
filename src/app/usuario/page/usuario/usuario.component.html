@@ -1,0 +1,34 @@
+<div class="usuario-layout">
+
+  <!-- Header con botones -->
+  <div class="header">
+    <button mat-raised-button color="primary" (click)="agregarUsuario()">
+      <mat-icon>add</mat-icon> Agregar Usuario
+    </button>
+
+    <mat-form-field appearance="outline" class="search-field">
+      <mat-label>Buscar usuarios...</mat-label>
+      <input matInput 
+             [(ngModel)]="textoBusqueda" 
+             (input)="onSearchChange(textoBusqueda)"
+             placeholder="Escriba para filtrar automáticamente">
+      <button mat-icon-button matSuffix *ngIf="textoBusqueda" (click)="limpiarBusqueda()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
+  </div>
+
+  <!-- Tabla paginada -->
+  <app-tabla-paginada
+    [datos]="usuarios"
+    [columnasVisibles]="columnas"
+    [nombresColumnas]="nombresColumnas"
+    [totalRegistros]="totalRegistros"
+    [tamanioPagina]="tamanioPagina"
+    [paginaActual]="paginaActual"
+    [cargando]="cargando"
+    (cambiarPagina)="cambiarPagina($event)"
+    (ejecutarAccion)="manejarAccion($event)">
+  </app-tabla-paginada>
+  
+</div>

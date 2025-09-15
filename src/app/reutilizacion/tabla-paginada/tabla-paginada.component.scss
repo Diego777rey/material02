@@ -1,0 +1,59 @@
+.tabla-container {
+  width: 100%;
+  overflow-x: auto;
+  margin-top: 1rem;
+
+  table {
+    width: 100%;
+    
+    th, td {
+      padding: 12px 16px;
+      text-align: left;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    th {
+      font-weight: 600;
+      color: #333;
+      background-color: #f5f5f5;
+    }
+
+    // Columna de acciones con ancho fijo
+    .mat-column-acciones {
+      width: 120px;
+      text-align: center;
+    }
+
+    // Asegurar que las celdas de acciones estén centradas
+    td.mat-column-acciones {
+      text-align: center;
+      vertical-align: middle;
+    }
+
+    // Estilos para la celda de acciones
+    .acciones-cell {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      min-height: 48px;
+    }
+  }
+}
+
+mat-spinner {
+  display: block;
+  margin: 1rem auto;
+}
+
+// Estilos para estados de productos
+.status-active {
+  color: #4caf50;
+  font-weight: 500;
+}
+
+.status-inactive {
+  color: #f44336;
+  font-weight: 500;
+}
+  

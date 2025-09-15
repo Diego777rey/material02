@@ -1,0 +1,58 @@
+
+import { Injectable } from "@angular/core";
+import { map, Observable } from "rxjs";
+import { Apollo } from "apollo-angular";
+import { InputUsuario } from "./input.usuario";
+import { CREATE_USUARIO, DELETE_USUARIO, GET_USUARIOS, UPDATE_USUARIO, GET_USUARIOS_PAGINADOS, GET_USUARIO_BY_ID } from "src/app/graphql/graphql/usuario.graphql";
+@Injectable({
+  providedIn: 'root'
+})
+export class UsuarioService {
+  constructor(private apollo: Apollo) {}
+
+  getAll() {
+    return this.apollo.watchQuery<{ findAllUsuarios: InputUsuario[] }>({
+      query: GET_USUARIOS
+    }).valueChanges.pipe(map(result => result.data.findAllUsuarios));
+  }
+
+  getById(id: number) {
+    return this.apollo.watchQuery<{ findUsuarioById: InputUsuario }>({
+      query: GET_USUARIO_BY_ID,
+      variables: { id }
+    }).valueChanges.pipe(map(result => result.data.findUsuarioById));
+  }
+
+  create(usuario: InputUsuario) {
+    return this.apollo.mutate({
+      mutation: CREATE_USUARIO,
+      variables: { input: usuario }//aca le pasamos el parametro usuario que es de tipo input usuario
+    });
+  }
+
+  update(id: number, usuario: InputUsuario) {
+    return this.apollo.mutate({
+      mutation: UPDATE_USUARIO,
+      variables: { id, input: usuario }
+    });
+  }
+
+  delete(id: number) {
+    return this.apollo.mutate({
+      mutation: DELETE_USUARIO,
+      variables: { id }
+    });
+  }
+
+  getPaginated(page: number, size: number, search: string = ''): Observable<any> {
+    return this.apollo.watchQuery({
+      query: GET_USUARIOS_PAGINADOS,
+      variables: { page, size, search },
+      fetchPolicy: 'cache-and-network'
+    }).valueChanges.pipe(
+      map((result: any) => {
+        return result.data?.findUsuariosPaginated || { items: [], totalItems: 0, totalPages: 0, currentPage: 0 };
+      })
+    );
+  }
+}

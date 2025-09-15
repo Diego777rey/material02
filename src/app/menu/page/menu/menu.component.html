@@ -1,0 +1,54 @@
+<mat-sidenav-container class="sidenav-container">
+
+  <!-- Sidenav -->
+  <mat-sidenav #drawer mode="side" class="sidenav">
+    <div class="brand">
+      <div class="logo"><img src="assets/img/home.png" alt=""><br>
+      Menu</div>
+    </div>
+
+    <mat-nav-list>
+      <mat-list-item>
+        <img src="assets/img/usuarios.png" alt="Usuarios" class="icono-nav">
+        <span class="nav-text" routerLink="/usuario" routerLinkActive="active">Usuarios</span>
+      </mat-list-item>
+      <mat-list-item>
+        <img src="assets/img/empleado.png" alt="Usuarios" class="icono-nav">
+        <span class="nav-text" routerLink="/vendedor" routerLinkActive="active">Vendedores</span>
+      </mat-list-item>
+      <mat-list-item>
+        <img src="assets/img/cliente.png" alt="Usuarios" class="icono-nav">
+        <span class="nav-text" routerLink="/clientes" routerLinkActive="active">Clientes</span>
+      </mat-list-item>
+      <mat-list-item>
+        <img src="assets/img/categoria.png" alt="Usuarios" class="icono-nav">
+        <span class="nav-text" routerLink="/categoria" routerLinkActive="active">Categorías</span>
+      </mat-list-item>
+      <mat-list-item>
+        <img src="assets/img/producto.png" alt="Usuarios" class="icono-nav">
+        <span class="nav-text" routerLink="/producto" routerLinkActive="active">Productos</span>
+      </mat-list-item>
+      <mat-list-item>
+        <img src="assets/img/venta.png" alt="Usuarios" class="icono-nav">
+        <span class="nav-text" routerLink="/ventas" routerLinkActive="active">Ventas</span>
+      </mat-list-item>
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <!-- Toolbar -->
+  <mat-sidenav-content>
+    <mat-toolbar class="top-toolbar">
+      <button mat-icon-button (click)="drawer.toggle()">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <img src="assets/img/home.png" alt="home" class="icono-nav">
+      <span class="nav-text" routerLink="/bienvenido" routerLinkActive="active">Inicio</span>
+      <span class="toolbar-spacer"></span>
+      <button mat-icon-button aria-label="user">
+        <mat-icon>account_circle</mat-icon>
+      </button>
+    </mat-toolbar>
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+
+</mat-sidenav-container>
