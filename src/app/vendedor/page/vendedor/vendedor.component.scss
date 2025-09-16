@@ -15,7 +15,10 @@
     button {
       height: 40px;
     }
-
+    .botones {
+      display: flex;
+      gap: 10px; // espacio entre los botones
+    }
     .search-field {
       flex: 1 1 300px; // Ocupa el espacio disponible, mínimo 300px
       max-width: 400px;

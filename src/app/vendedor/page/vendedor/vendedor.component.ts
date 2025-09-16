@@ -130,6 +130,9 @@ export class VendedorComponent implements OnInit, OnDestroy {
       this.servicioVendedor.delete(vendedor.id).subscribe(()=> this.cargarVendedores());
     }
   }
+  generarReporte(){
+    this.router.navigate(['/vendedor/generar']);
+  }
 
   // 🔹 Manejar acción de fila
   manejarAccion(evento: AccionTabla<Vendedor>){

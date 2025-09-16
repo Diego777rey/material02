@@ -2,9 +2,14 @@
 
   <!-- Header con botones -->
   <div class="header">
-    <button mat-raised-button color="primary" (click)="agregarVendedor()">
-      <mat-icon>add</mat-icon> Agregar Vendedor
-    </button>
+    <div class="botones">
+      <button mat-raised-button color="primary" (click)="agregarVendedor()">
+        <mat-icon>add</mat-icon> Agregar Vendedor
+      </button>
+      <button mat-raised-button color="primary" (click)="generarReporte()">
+        <mat-icon>file_download</mat-icon> Generar Reporte
+      </button>
+    </div>
 
     <mat-form-field appearance="outline" class="search-field">
       <mat-label>Buscar vendedores...</mat-label>

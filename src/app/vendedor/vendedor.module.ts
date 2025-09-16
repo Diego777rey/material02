@@ -19,8 +19,15 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { FormulariovendedorComponent } from './page/formulariovendedor/formulariovendedor.component';
 import { MatSelectModule } from '@angular/material/select';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+
+
+
+
+import { ReporteVendedorComponent } from './page/reportevendedor/reportevendedor.component';
 @NgModule({
-  declarations: [VendedorComponent, FormulariovendedorComponent],
+  declarations: [VendedorComponent, FormulariovendedorComponent, ReporteVendedorComponent],
   imports: [
     CommonModule,
     VendedorRoutingModule,
@@ -38,7 +45,9 @@ import { MatSelectModule } from '@angular/material/select';
     MatNativeDateModule,
     MatCheckboxModule,
     MatPaginatorModule,
-    MatSelectModule
+    MatSelectModule,
+    MatProgressSpinnerModule,
+    MatSnackBarModule
 ]
 })
 export class VendedorModule { }
