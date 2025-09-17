@@ -91,7 +91,7 @@ export class FormulariocategoriaComponent implements OnInit, OnDestroy {
   }
 
   volver(): void {
-    this.router.navigate(['/categoria']);
+    this.router.navigate(['dashboard/categoria']);
   }
 
   guardar(): void {
@@ -110,7 +110,7 @@ export class FormulariocategoriaComponent implements OnInit, OnDestroy {
     obs$.pipe(takeUntil(this.destroy$)).subscribe(() => {
       this.loading = false;
       this.formEnabled = false;
-      this.router.navigate(['/categoria']);
+      this.router.navigate(['dashboard/categoria']);
     });
   }
 }

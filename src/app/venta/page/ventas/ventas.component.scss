@@ -20,8 +20,21 @@
       flex: 1 1 300px; // Ocupa el espacio disponible, mínimo 300px
       max-width: 400px;
 
+      .mat-form-field-flex {
+        background-color: #ffffff !important; // Fondo blanco del campo
+      }
+
+      .mat-form-field-outline {
+        color: #ccc !important; // Borde gris claro
+      }
+
       input {
         padding: 5px 10px;
+        color: #333 !important; // Texto oscuro para contraste
+      }
+
+      mat-label {
+        color: #666 !important; // Label gris
       }
 
       button {

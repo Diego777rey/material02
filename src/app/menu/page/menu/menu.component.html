@@ -10,27 +10,27 @@
     <mat-nav-list>
       <mat-list-item>
         <img src="assets/img/usuarios.png" alt="Usuarios" class="icono-nav">
-        <span class="nav-text" routerLink="/usuario" routerLinkActive="active">Usuarios</span>
+        <span class="nav-text" routerLink="/dashboard/usuario" routerLinkActive="active">Usuarios</span>
       </mat-list-item>
       <mat-list-item>
         <img src="assets/img/empleado.png" alt="Usuarios" class="icono-nav">
-        <span class="nav-text" routerLink="/vendedor" routerLinkActive="active">Vendedores</span>
+        <span class="nav-text" routerLink="/dashboard/vendedor" routerLinkActive="active">Vendedores</span>
       </mat-list-item>
       <mat-list-item>
         <img src="assets/img/cliente.png" alt="Usuarios" class="icono-nav">
-        <span class="nav-text" routerLink="/clientes" routerLinkActive="active">Clientes</span>
+        <span class="nav-text" routerLink="/dashboard/clientes" routerLinkActive="active">Clientes</span>
       </mat-list-item>
       <mat-list-item>
         <img src="assets/img/categoria.png" alt="Usuarios" class="icono-nav">
-        <span class="nav-text" routerLink="/categoria" routerLinkActive="active">Categorías</span>
+        <span class="nav-text" routerLink="/dashboard/categoria" routerLinkActive="active">Categorías</span>
       </mat-list-item>
       <mat-list-item>
         <img src="assets/img/producto.png" alt="Usuarios" class="icono-nav">
-        <span class="nav-text" routerLink="/producto" routerLinkActive="active">Productos</span>
+        <span class="nav-text" routerLink="/dashboard/producto" routerLinkActive="active">Productos</span>
       </mat-list-item>
       <mat-list-item>
         <img src="assets/img/venta.png" alt="Usuarios" class="icono-nav">
-        <span class="nav-text" routerLink="/ventas" routerLinkActive="active">Ventas</span>
+        <span class="nav-text" routerLink="/dashboard/ventas" routerLinkActive="active">Ventas</span>
       </mat-list-item>
     </mat-nav-list>
   </mat-sidenav>
@@ -42,8 +42,11 @@
         <mat-icon>menu</mat-icon>
       </button>
       <img src="assets/img/home.png" alt="home" class="icono-nav">
-      <span class="nav-text" routerLink="/bienvenido" routerLinkActive="active">Inicio</span>
+      <span class="nav-text" routerLink="/dashboard/bienvenido" routerLinkActive="active">Inicio</span>
       <span class="toolbar-spacer"></span>
+      <button mat-icon-button aria-label="logout" (click)="logout()" matTooltip="Cerrar sesión">
+        <mat-icon>logout</mat-icon>
+      </button>
       <button mat-icon-button aria-label="user">
         <mat-icon>account_circle</mat-icon>
       </button>

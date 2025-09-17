@@ -89,7 +89,7 @@ export class FormulariousuarioComponent implements OnInit {
     request.subscribe({
       next: () => {
         this.loading = false;
-        this.router.navigate(['/usuario']);
+        this.router.navigate(['dashboard/usuario']);
       },
       error: (err) => {
         console.error('Error al guardar usuario:', err);
@@ -113,6 +113,6 @@ export class FormulariousuarioComponent implements OnInit {
   }
 
   volver(): void {
-    this.router.navigate(['/usuario']);
+    this.router.navigate(['dashboard/usuario']);
   }
 }

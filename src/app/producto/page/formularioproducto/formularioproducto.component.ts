@@ -121,7 +121,7 @@ export class ProductoFormComponent implements OnInit, OnDestroy {
   }
 
   volver(): void {
-    this.router.navigate(['/producto']);
+    this.router.navigate(['dashboard/producto']);
   }
 
   guardar(): void {
@@ -148,7 +148,7 @@ export class ProductoFormComponent implements OnInit, OnDestroy {
     obs$.pipe(takeUntil(this.destroy$)).subscribe(() => {
       this.loading = false;
       this.formEnabled = false;
-      this.router.navigate(['/producto']);
+      this.router.navigate(['dashboard/producto']);
     });
   }
 }

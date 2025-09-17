@@ -59,7 +59,7 @@ export class ReporteclienteComponent implements OnInit, OnDestroy {
     }
   }
   volver(){
-    this.router.navigate(['/clientes']);
+    this.router.navigate(['dashboard/clientes']);
   }
 
   descargarReporte(): void {

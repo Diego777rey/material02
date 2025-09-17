@@ -108,12 +108,12 @@ export class UsuarioComponent implements OnInit, OnDestroy {
   }
 
   agregarUsuario(){
-    this.router.navigate(['/usuario/crear']);
+    this.router.navigate(['dashboard/usuario/crear']);
   }
 
   editarUsuario(usuario: InputUsuario){
     if(!usuario.id) return;
-    this.router.navigate(['/usuario/editar', usuario.id]);
+    this.router.navigate(['dashboard/usuario/editar', usuario.id]);
   }
 
   // 🔹 Eliminar usuario

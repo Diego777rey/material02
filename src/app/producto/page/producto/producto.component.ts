@@ -112,12 +112,12 @@ export class ProductoComponent implements OnInit, OnDestroy {
     this.searchSubject.next(''); // Emitir cadena vacía para limpiar
   }
   agregarProducto(){
-    this.router.navigate(['/producto/crear']);
+    this.router.navigate(['dashboard/producto/crear']);
   }
 
   editarProducto(producto: InputProducto){
     if(!producto.id) return;
-    this.router.navigate(['/producto/editar', producto.id]);
+    this.router.navigate(['dashboard/producto/editar', producto.id]);
   }
 
   // 🔹 Eliminar producto

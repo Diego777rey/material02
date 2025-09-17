@@ -9,7 +9,7 @@ import { VendedorService } from 'src/app/vendedor/components/vendedor.service';
 type Cliente = { id?: number; nombre: string; apellido: string };
 type Vendedor = { id?: number; nombre: string; apellido: string };
 type Producto = { id?: number; descripcion: string; precio: number };
-type ProductoVenta = { productoId?: number; descripcion: string; cantidad: number; precio: number };
+type ProductoVenta = { productoId?: number; descripcion: string; cantidad: number; precio: number; subtotal: number };
 
 @Component({
   selector: 'app-formularioventas',
@@ -26,6 +26,7 @@ export class FormularioventasComponent implements OnInit {
   vendedores: Vendedor[] = [];
   productos: Producto[] = [];
   productosAgregados: ProductoVenta[] = [];
+  totalVenta: number = 0;
 
   columnasProductos = ['producto', 'precio', 'cantidad', 'subtotal', 'acciones'];
 
@@ -51,6 +52,7 @@ export class FormularioventasComponent implements OnInit {
   ngOnInit(): void {
     this.cargarDatos();
     this.verificarEdicion();
+    this.actualizarTotal(); // Inicializar el total
   }
 
   private verificarEdicion(): void {
@@ -96,7 +98,17 @@ export class FormularioventasComponent implements OnInit {
             clienteId: venta.cliente?.id,
             vendedorId: venta.vendedor?.id
           });
-          this.productosAgregados = venta.productos || [];
+          // Convert items to productosAgregados format
+          this.productosAgregados = (venta.items || []).map((item: any) => ({
+            productoId: item.producto?.id,
+            descripcion: item.producto?.descripcion || '',
+            cantidad: item.cantidad,
+            precio: item.precio,
+            subtotal: item.subtotal || (item.cantidad * item.precio)
+          }));
+          
+          // Actualizar el total de la venta
+          this.actualizarTotal();
         },
         error: err => console.error('Error cargando venta', err)
       });
@@ -110,27 +122,39 @@ export class FormularioventasComponent implements OnInit {
     if (productoId && cantidad > 0) {
       const producto = this.productos.find(p => p.id === productoId);
       if (producto) {
+        const subtotal = producto.precio * cantidad;
+        console.log('Agregando producto:', producto.descripcion, 'Subtotal:', subtotal);
+        
         // Verificar si el producto ya está agregado
         const productoExistente = this.productosAgregados.find(p => p.productoId === productoId);
         if (productoExistente) {
           productoExistente.cantidad += cantidad;
+          productoExistente.subtotal = productoExistente.precio * productoExistente.cantidad;
+          console.log('Producto existente actualizado:', productoExistente);
         } else {
-          this.productosAgregados.push({
+          const nuevoProducto = {
             productoId: producto.id,
             descripcion: producto.descripcion,
             cantidad: cantidad,
-            precio: producto.precio
-          });
+            precio: producto.precio,
+            subtotal: subtotal
+          };
+          this.productosAgregados.push(nuevoProducto);
+          console.log('Nuevo producto agregado:', nuevoProducto);
         }
         
         // Limpiar el formulario de producto
         this.ventaForm.patchValue({ productoId: null, cantidad: 1 });
+        
+        // Actualizar el total de la venta
+        this.actualizarTotal();
       }
     }
   }
 
   removerProducto(index: number): void {
     this.productosAgregados.splice(index, 1);
+    this.actualizarTotal();
   }
 
   calcularTotal(): number {
@@ -139,12 +163,32 @@ export class FormularioventasComponent implements OnInit {
     }, 0);
   }
 
+  actualizarTotal(): void {
+    if (this.productosAgregados && this.productosAgregados.length > 0) {
+      this.totalVenta = this.productosAgregados.reduce((total, producto) => {
+        const subtotal = producto.subtotal || (producto.precio * producto.cantidad);
+        return total + subtotal;
+      }, 0);
+    } else {
+      this.totalVenta = 0;
+    }
+    console.log('Total actualizado:', this.totalVenta);
+    console.log('Productos agregados:', this.productosAgregados);
+  }
+
   onSubmit(): void {
     if (this.ventaForm.valid && this.productosAgregados.length > 0) {
+      // Remove productoId and cantidad from form data as they're not part of VentaInput
+      const { productoId, cantidad, ...ventaFormData } = this.ventaForm.value;
+      
       const ventaData = {
-        ...this.ventaForm.value,
-        productos: this.productosAgregados,
-        total: this.calcularTotal()
+        ...ventaFormData,
+        items: this.productosAgregados.map(producto => ({
+          productoId: producto.productoId,
+          cantidad: producto.cantidad,
+          precio: producto.precio,
+          subtotal: producto.subtotal // Incluir el subtotal de cada item
+        }))
       };
 
       const request$ = this.esEdicion && this.ventaId
@@ -154,7 +198,7 @@ export class FormularioventasComponent implements OnInit {
       request$.subscribe({
         next: () => {
           alert(`Venta ${this.esEdicion ? 'actualizada' : 'creada'} correctamente`);
-          this.router.navigate(['/venta']);
+          this.router.navigate(['dashboard/ventas']);
         },
         error: err => {
           console.error('Error guardando venta', err);
@@ -165,6 +209,6 @@ export class FormularioventasComponent implements OnInit {
   }
 
   cancelar(): void {
-    this.router.navigate(['/venta']);
+    this.router.navigate(['/dashboard/ventas']);
   }
 }

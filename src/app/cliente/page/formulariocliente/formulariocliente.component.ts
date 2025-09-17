@@ -106,7 +106,7 @@ export class FormularioclienteComponent implements OnInit, OnDestroy {
   }
 
   volver(): void {
-    this.router.navigate(['/clientes']);
+    this.router.navigate(['dashboard/clientes']);
   }
 
   guardar(): void {
@@ -131,7 +131,7 @@ export class FormularioclienteComponent implements OnInit, OnDestroy {
     obs$.pipe(takeUntil(this.destroy$)).subscribe(() => {
       this.loading = false;
       this.formEnabled = false;
-      this.router.navigate(['/cliente']);
+      this.router.navigate(['dashboard/clientes']);
     });
   }
 }

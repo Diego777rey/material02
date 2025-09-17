@@ -28,12 +28,16 @@
           <span *ngIf="columna === 'total'">
             {{ elemento[columna] | currency:'USD':'symbol':'1.2-2' }}
           </span>
+          <!-- Mostrar subtotal formateado -->
+          <span *ngIf="columna === 'subtotal'">
+            {{ elemento[columna] | currency:'USD':'symbol':'1.2-2' }}
+          </span>
           <!-- Mostrar estado activo/inactivo -->
           <span *ngIf="columna === 'activo'" [class]="elemento[columna] ? 'status-active' : 'status-inactive'">
             {{ elemento[columna] ? 'Activo' : 'Inactivo' }}
           </span>
           <!-- Mostrar campos normales -->
-          <span *ngIf="columna !== 'categoria' && columna !== 'cliente' && columna !== 'vendedor' && columna !== 'fecha' && columna !== 'total' && columna !== 'activo'">
+          <span *ngIf="columna !== 'categoria' && columna !== 'cliente' && columna !== 'vendedor' && columna !== 'fecha' && columna !== 'total' && columna !== 'subtotal' && columna !== 'activo'">
             {{ elemento[columna] }}
           </span>
         </ng-container>

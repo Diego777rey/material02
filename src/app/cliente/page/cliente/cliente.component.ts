@@ -115,15 +115,15 @@ export class ClienteComponent implements OnInit, OnDestroy {
   }
 
   agregarCliente(){
-    this.router.navigate(['/clientes/crear']);
+    this.router.navigate(['dashboard/clientes/crear']);
   }
   generarReporte(){
-    this.router.navigate(['/clientes/generar']);
+    this.router.navigate(['dashboard/clientes/generar']);
   }
 
   editarCliente(cliente: Cliente){
     if(!cliente.id) return;
-    this.router.navigate(['/clientes/editar', cliente.id]);
+    this.router.navigate(['dashboard/clientes/editar', cliente.id]);
   }
 
   //eliminar clientes

@@ -109,12 +109,12 @@ export class CategoriaComponent implements OnInit, OnDestroy {
   }
 
   agregarCategoria(){
-    this.router.navigate(['/categoria/crear']);
+    this.router.navigate(['dashboard/categoria/crear']);
   }
 
   editarCategoria(categoria: Categoria){
     if(!categoria.id) return;
-    this.router.navigate(['/categoria/editar', categoria.id]);
+    this.router.navigate(['dashboard/categoria/editar', categoria.id]);
   }
 
   // 🔹 Eliminar categoría

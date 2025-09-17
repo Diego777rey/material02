@@ -8,13 +8,14 @@ import { Subject, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs';
 type Cliente = { id?: number; nombre: string; apellido: string };
 type Vendedor = { id?: number; nombre: string; apellido: string };
 type Producto = { id?: number; descripcion: string; precio: number };
-type ProductoVenta = { productoId?: number; descripcion: string; cantidad: number; precio: number };
+type ProductoVenta = { productoId?: number; descripcion: string; cantidad: number; precio: number; subtotal: number };
 type Venta = {
   id?: number;
   cliente: Cliente;
   vendedor: Vendedor;
   fecha: string | Date; 
-  productos: ProductoVenta[];
+  items: ProductoVenta[];
+  total?: number;
 };
 
 @Component({
@@ -104,10 +105,13 @@ export class VentasComponent implements OnInit, OnDestroy {
 
         this.totalRegistros = ventasFiltradas.length;
         
-        // Aplicar paginación
+        // Aplicar paginación y calcular totales
         const startIndex = this.paginaActual * this.tamanioPagina;
         const endIndex = startIndex + this.tamanioPagina;
-        this.ventas = ventasFiltradas.slice(startIndex, endIndex);
+        this.ventas = ventasFiltradas.slice(startIndex, endIndex).map(venta => ({
+          ...venta,
+          total: this.calcularTotalVenta(venta)
+        }));
         
         this.cargando = false;
       },
@@ -131,12 +135,12 @@ export class VentasComponent implements OnInit, OnDestroy {
   }
 
   agregarVenta() {
-    this.router.navigate(['/ventas/crear']);
+    this.router.navigate(['/dashboard/ventas/crear']);
   }
 
   editarVenta(venta: Venta) {
     if (!venta.id) return;
-    this.router.navigate(['/ventas/editar', venta.id]);
+    this.router.navigate(['dashboard/ventas/editar', venta.id]);
   }
 
   //Eliminar venta
@@ -155,6 +159,20 @@ export class VentasComponent implements OnInit, OnDestroy {
       case 'ver': break;
       case 'custom': break;
     }
+  }
+
+  // 🔹 Calcular el total de una venta sumando los subtotales de los items
+  calcularTotalVenta(venta: any): number {
+    if (!venta.items || venta.items.length === 0) {
+      // Venta sin items - mostrar $0.00
+      return 0;
+    }
+    
+    const total = venta.items.reduce((total: number, item: any) => {
+      return total + (item.subtotal || 0);
+    }, 0);
+    
+    return total;
   }
 
   // 🔹 Formatear precio en USD

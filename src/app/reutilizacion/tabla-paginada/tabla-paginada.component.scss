@@ -5,17 +5,25 @@
 
   table {
     width: 100%;
-    
+    border-collapse: collapse;
+    background-color: #333030; // fondo oscuro de toda la tabla
+    color: #fff; // texto blanco por defecto
+
     th, td {
       padding: 12px 16px;
       text-align: left;
-      border-bottom: 1px solid #e0e0e0;
+      border-bottom: 1px solid #555; // borde suave para filas
+      color: #fff; // texto blanco en celdas
     }
 
     th {
       font-weight: 600;
-      color: #333;
-      background-color: #f5f5f5;
+      background-color: #3a3737; // encabezado más oscuro
+      color: #fff;
+    }
+
+    td {
+      background-color: #333030; // filas oscuras
     }
 
     // Columna de acciones con ancho fijo
@@ -24,13 +32,11 @@
       text-align: center;
     }
 
-    // Asegurar que las celdas de acciones estén centradas
     td.mat-column-acciones {
       text-align: center;
       vertical-align: middle;
     }
 
-    // Estilos para la celda de acciones
     .acciones-cell {
       display: flex;
       justify-content: center;
@@ -44,9 +50,10 @@
 mat-spinner {
   display: block;
   margin: 1rem auto;
+  color: #fff; // spinner blanco
 }
 
-// Estilos para estados de productos
+// Estados de productos
 .status-active {
   color: #4caf50;
   font-weight: 500;
@@ -56,4 +63,3 @@ mat-spinner {
   color: #f44336;
   font-weight: 500;
 }
-  

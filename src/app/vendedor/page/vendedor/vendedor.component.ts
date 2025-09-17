@@ -115,12 +115,12 @@ export class VendedorComponent implements OnInit, OnDestroy {
   }
 
   agregarVendedor(){
-    this.router.navigate(['/vendedor/crear']);
+    this.router.navigate(['dashboard/vendedor/crear']);
   }
 
   editarVendedor(vendedor: Vendedor){
     if(!vendedor.id) return;
-    this.router.navigate(['/vendedor/editar', vendedor.id]);
+    this.router.navigate(['dashboard/vendedor/editar', vendedor.id]);
   }
 
   // 🔹 Eliminar vendedor
@@ -131,7 +131,7 @@ export class VendedorComponent implements OnInit, OnDestroy {
     }
   }
   generarReporte(){
-    this.router.navigate(['/vendedor/generar']);
+    this.router.navigate(['dashboard/vendedor/generar']);
   }
 
   // 🔹 Manejar acción de fila

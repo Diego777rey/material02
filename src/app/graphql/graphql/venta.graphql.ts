@@ -53,6 +53,7 @@ export const VENTA_BY_ID_QUERY = gql`
         id
         cantidad
         precio
+        subtotal
         producto {
           id
           descripcion
@@ -65,7 +66,7 @@ export const VENTA_BY_ID_QUERY = gql`
 `;
 
 export const CREAR_VENTA_MUTATION = gql`
-  mutation CrearVenta($input: VentaInput!) {
+  mutation CrearVenta($input: InputVenta!) {
     crearVenta(input: $input) {
       id
       fecha
@@ -82,6 +83,7 @@ export const CREAR_VENTA_MUTATION = gql`
         id
         cantidad
         precio
+        subtotal
         producto {
           id
           descripcion
@@ -92,7 +94,7 @@ export const CREAR_VENTA_MUTATION = gql`
 `;
 
 export const ACTUALIZAR_VENTA_MUTATION = gql`
-  mutation ActualizarVenta($id: ID!, $input: VentaInput!) {
+  mutation ActualizarVenta($id: ID!, $input: InputVenta!) {
     actualizarVenta(id: $id, input: $input) {
       id
       fecha
@@ -109,6 +111,7 @@ export const ACTUALIZAR_VENTA_MUTATION = gql`
         id
         cantidad
         precio
+        subtotal
         producto {
           id
           descripcion

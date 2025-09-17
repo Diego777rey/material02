@@ -88,7 +88,7 @@
 
               <ng-container matColumnDef="subtotal">
                 <th mat-header-cell *matHeaderCellDef>Subtotal</th>
-                <td mat-cell *matCellDef="let producto">{{ (producto.precio * producto.cantidad) | currency:'USD':'symbol':'1.2-2' }}</td>
+                <td mat-cell *matCellDef="let producto">{{ producto.subtotal | currency:'USD':'symbol':'1.2-2' }}</td>
               </ng-container>
 
               <ng-container matColumnDef="acciones">
@@ -105,7 +105,9 @@
             </table>
 
             <div class="total-section">
-              <h3>Total: {{ calcularTotal() | currency:'USD':'symbol':'1.2-2' }}</h3>
+              <h3>Total: {{ totalVenta | currency:'USD':'symbol':'1.2-2' }}</h3>
+              <p>Debug - Total value: {{ totalVenta }}</p>
+              <p>Debug - Productos count: {{ productosAgregados.length }}</p>
             </div>
           </div>
         </div>

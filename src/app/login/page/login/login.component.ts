@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, Validators } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { UsuarioService } from 'src/app/usuario/components/usuario.service';
 import { InputUsuario } from 'src/app/usuario/components/input.usuario';
-import { Router } from '@angular/router';
-import { AuthService } from '../../components/auth.service';
+import { Router, ActivatedRoute } from '@angular/router';
+import { AuthService } from '../../../core/guards/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -13,14 +13,27 @@ import { AuthService } from '../../components/auth.service';
 export class LoginComponent implements OnInit {
 
   usuarioForm = this.fb.group({
-    'nombre': ['', Validators.required],
-    'contrasenha': ['', Validators.required],
+    nombre: ['', Validators.required],
+    contrasenha: ['', Validators.required],
   });
 
-  constructor(private fb: FormBuilder,
-              private usuarioService: UsuarioService, private router: Router,private authService: AuthService) {} // 🔹 inyectamos el servicio
+  returnUrl: string = '/dashboard/bienvenido'; // URL por defecto
 
-  ngOnInit(): void {}
+  constructor(
+    private fb: FormBuilder,
+    private usuarioService: UsuarioService,
+    private router: Router,
+    private route: ActivatedRoute,
+    private authService: AuthService
+  ) {}
+
+  ngOnInit(): void {
+    // Captura la URL a la que intentaba acceder antes de loguearse
+    const queryReturnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
+    if (queryReturnUrl) {
+      this.returnUrl = queryReturnUrl;
+    }
+  }
 
   iniciarSesion() {
     if (this.usuarioForm.invalid) {
@@ -28,18 +41,21 @@ export class LoginComponent implements OnInit {
       return;
     }
 
-    const formValue = this.usuarioForm.value;
-    const nombre = formValue.nombre;
-    const contrasenha = formValue.contrasenha;
+    const { nombre, contrasenha } = this.usuarioForm.value;
 
     this.usuarioService.getAll().subscribe((usuarios: InputUsuario[]) => {
-      const usuarioEncontrado = usuarios.find(u => u.nombre === nombre && u.contrasenha === contrasenha);
+      const usuarioEncontrado = usuarios.find(
+        u => u.nombre === nombre && u.contrasenha === contrasenha
+      );
+
       if (usuarioEncontrado) {
         console.log('Login exitoso', usuarioEncontrado);
-        this.authService.login();
-        this.router.navigate(['/bienvenido']);
+        this.authService.login(usuarioEncontrado);
+
+        // Redirige a la URL original o al dashboard
+        this.router.navigateByUrl(this.returnUrl);
       } else {
-        alert('Usuario o contraseña incorrecta')
+        alert('Usuario o contraseña incorrecta');
         console.log('Usuario o contraseña incorrecta');
       }
     });
