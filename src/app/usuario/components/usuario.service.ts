@@ -1,58 +1,82 @@
-
 import { Injectable } from "@angular/core";
 import { map, Observable } from "rxjs";
 import { Apollo } from "apollo-angular";
 import { InputUsuario } from "./input.usuario";
-import { CREATE_USUARIO, DELETE_USUARIO, GET_USUARIOS, UPDATE_USUARIO, GET_USUARIOS_PAGINADOS, GET_USUARIO_BY_ID } from "src/app/graphql/graphql/usuario.graphql";
+import {
+  CREATE_USUARIO,
+  DELETE_USUARIO,
+  GET_USUARIOS,
+  UPDATE_USUARIO,
+  GET_USUARIOS_PAGINADOS,
+  GET_USUARIO_BY_ID,
+  LOGIN_USUARIO
+} from "src/app/graphql/graphql/usuario.graphql";
+
 @Injectable({
   providedIn: 'root'
 })
 export class UsuarioService {
   constructor(private apollo: Apollo) {}
 
-  getAll() {
+  // --- LOGIN seguro con GraphQL ---
+  login(nombre: string, contrasenha: string) {
+    return this.apollo.mutate({
+      mutation: LOGIN_USUARIO,
+      variables: { nombre, contrasenha }
+    }).pipe(
+      map((result: any) => result.data?.login) // login es el nombre de la mutation GraphQL
+    );
+  }
+  
+  
+
+  // --- Obtener todos los usuarios ---
+  getAll(): Observable<InputUsuario[]> {
     return this.apollo.watchQuery<{ findAllUsuarios: InputUsuario[] }>({
       query: GET_USUARIOS
     }).valueChanges.pipe(map(result => result.data.findAllUsuarios));
   }
 
-  getById(id: number) {
+  // --- Obtener usuario por ID ---
+  getById(id: number): Observable<InputUsuario> {
     return this.apollo.watchQuery<{ findUsuarioById: InputUsuario }>({
       query: GET_USUARIO_BY_ID,
       variables: { id }
     }).valueChanges.pipe(map(result => result.data.findUsuarioById));
   }
 
-  create(usuario: InputUsuario) {
+  // --- Crear usuario ---
+  create(usuario: InputUsuario): Observable<any> {
     return this.apollo.mutate({
       mutation: CREATE_USUARIO,
-      variables: { input: usuario }//aca le pasamos el parametro usuario que es de tipo input usuario
+      variables: { input: usuario }
     });
   }
 
-  update(id: number, usuario: InputUsuario) {
+  // --- Actualizar usuario ---
+  update(id: number, usuario: InputUsuario): Observable<any> {
     return this.apollo.mutate({
       mutation: UPDATE_USUARIO,
       variables: { id, input: usuario }
     });
   }
 
-  delete(id: number) {
+  // --- Eliminar usuario ---
+  delete(id: number): Observable<any> {
     return this.apollo.mutate({
       mutation: DELETE_USUARIO,
       variables: { id }
     });
   }
 
+  // --- Obtener usuarios paginados ---
   getPaginated(page: number, size: number, search: string = ''): Observable<any> {
     return this.apollo.watchQuery({
       query: GET_USUARIOS_PAGINADOS,
       variables: { page, size, search },
       fetchPolicy: 'cache-and-network'
     }).valueChanges.pipe(
-      map((result: any) => {
-        return result.data?.findUsuariosPaginated || { items: [], totalItems: 0, totalPages: 0, currentPage: 0 };
-      })
+      map((result: any) => result.data?.findUsuariosPaginated || { items: [], totalItems: 0, totalPages: 0, currentPage: 0 })
     );
   }
 }

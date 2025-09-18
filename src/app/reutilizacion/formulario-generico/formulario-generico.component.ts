@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnChanges, SimpleChanges } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { CampoFormulario } from './campo.formulario';
 
@@ -7,7 +7,7 @@ import { CampoFormulario } from './campo.formulario';
   templateUrl: './formulario-generico.component.html',
   styleUrls: ['./formulario-generico.component.scss']
 })
-export class FormularioGenericoComponent {
+export class FormularioGenericoComponent implements OnChanges {
   @Input() titulo = 'Formulario';
   @Input() formGroup!: FormGroup;
   @Input() campos: CampoFormulario[] = [];
@@ -19,6 +19,16 @@ export class FormularioGenericoComponent {
   @Output() cancelarEvento = new EventEmitter<void>();
   @Output() nuevoEvento = new EventEmitter<void>();
   @Output() volverEvento = new EventEmitter<void>();
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['formEnabled'] && this.formGroup) {
+      if (this.formEnabled) {
+        this.formGroup.enable({ emitEvent: false });
+      } else {
+        this.formGroup.disable({ emitEvent: false });
+      }
+    }
+  }
 
   guardar() {
     this.guardarEvento.emit();

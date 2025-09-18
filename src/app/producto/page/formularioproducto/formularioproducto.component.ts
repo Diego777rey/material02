@@ -59,7 +59,7 @@ export class ProductoFormComponent implements OnInit, OnDestroy {
     // Crear los FormControls
     this.campos.forEach(campo => {
       const validators = campo.requerido ? [Validators.required] : [];
-      this.formGroup.addControl(campo.control, this.fb.control('', validators));
+      this.formGroup.addControl(campo.control, this.fb.control({value: '', disabled: true}, validators));
     });
   }
 
@@ -70,6 +70,7 @@ export class ProductoFormComponent implements OnInit, OnDestroy {
       this.productoId = Number(id);
       this.loadProduct(this.productoId);
       this.formEnabled = true; // si es edición, habilitamos el formulario
+      this.formGroup.enable();
     }
   }
 
@@ -113,11 +114,13 @@ export class ProductoFormComponent implements OnInit, OnDestroy {
   nuevo(): void {
     this.formGroup.reset({ activo: true });
     this.formEnabled = true;
+    this.formGroup.enable();
   }
 
   cancelar(): void {
     this.formGroup.reset();
     this.formEnabled = false;
+    this.formGroup.disable();
   }
 
   volver(): void {

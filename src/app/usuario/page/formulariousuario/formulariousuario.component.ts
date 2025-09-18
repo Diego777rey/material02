@@ -53,7 +53,13 @@ export class FormulariousuarioComponent implements OnInit {
   private initCampos(): void {
     this.campos = [
       { control: 'nombre', label: 'Nombre', tipo: 'text', placeholder: 'Ingrese el nombre del usuario', requerido: true },
-      { control: 'contrasenha', label: 'Contraseña', tipo: 'text', placeholder: 'Ingrese la contraseña', requerido: true }
+      { control: 'contrasenha', label: 'Contraseña', tipo: 'text', placeholder: 'Ingrese la contraseña', requerido: true },
+      { control: 'email', label: 'Email', tipo: 'text', placeholder: 'Ingrese el email del usuario', requerido: true },
+      { control: 'rol', label: 'Rol', tipo: 'select', placeholder: 'Seleccione el rol del usuario', requerido: true, opciones: [
+        { label: 'Administrador', value: 'ADMIN'},
+        { label: 'Usuario', value: 'USER'},
+        { label: 'Editor', value: 'EDITOR' }
+      ] }
     ];
   }
 

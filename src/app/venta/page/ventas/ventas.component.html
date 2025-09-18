@@ -6,16 +6,18 @@
       <mat-icon>add</mat-icon> Agregar Venta
     </button>
 
-    <mat-form-field  class="search-field">
-      <mat-label>Buscar ventas...</mat-label>
-      <input matInput 
-             [(ngModel)]="textoBusqueda" 
-             (input)="onSearchChange(textoBusqueda)"
-             placeholder="Escriba para filtrar automáticamente">
-      <button mat-icon-button matSuffix *ngIf="textoBusqueda" (click)="limpiarBusqueda()">
-        <mat-icon>close</mat-icon>
-      </button>
-    </mat-form-field>
+    <div class="search-field">
+      <mat-form-field appearance="outline">
+        <mat-label>Buscar ventas...</mat-label>
+        <input matInput 
+               [(ngModel)]="textoBusqueda" 
+               (input)="onSearchChange(textoBusqueda)"
+               placeholder="Escriba para filtrar automáticamente">
+        <button mat-icon-button matSuffix *ngIf="textoBusqueda" (click)="limpiarBusqueda()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+    </div>
   </div>
 
   <!-- Tabla paginada -->

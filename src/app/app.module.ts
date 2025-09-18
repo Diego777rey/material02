@@ -5,7 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { GraphQLModule } from './graphql.module';
 import { ApolloModule } from 'apollo-angular';
 import { MenuModule } from './menu/menu.module';
@@ -23,7 +23,9 @@ import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+// import { AuthInterceptor } from './AuthInterceptor'; // Comentado - GraphQL maneja su propia autenticación
 
 @NgModule({
   declarations: [
@@ -55,10 +57,18 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     MatTableModule,
     MatPaginatorModule,
     MatTooltipModule,
-    MatMenuModule
+    MatMenuModule,
+    MatProgressSpinnerModule
     
   ],
-  providers: [],
+  providers:  [
+    // AuthInterceptor comentado - GraphQL maneja su propia autenticación
+    // {
+    //   provide: HTTP_INTERCEPTORS,
+    //   useClass: AuthInterceptor,
+    //   multi: true
+    // }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

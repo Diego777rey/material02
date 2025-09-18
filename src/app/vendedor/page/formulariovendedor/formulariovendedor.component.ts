@@ -131,7 +131,7 @@ export class FormulariovendedorComponent implements OnInit, OnDestroy {
     obs$.pipe(takeUntil(this.destroy$)).subscribe(() => {
       this.loading = false;
       this.formEnabled = false;
-      this.router.navigate(['dashboard/vendedor']);
+     // this.router.navigate(['dashboard/vendedor']);
     });
   }
 }

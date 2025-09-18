@@ -66,6 +66,7 @@ export class CategoriaComponent implements OnInit, OnDestroy {
 
   // 🔹 Método para manejar cambios en el input de búsqueda
   onSearchChange(searchText: string): void {
+    this.textoBusqueda = searchText;
     this.searchSubject.next(searchText);
   }
 
