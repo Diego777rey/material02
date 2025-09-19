@@ -123,14 +123,14 @@ export class FormularioventasComponent implements OnInit {
       const producto = this.productos.find(p => p.id === productoId);
       if (producto) {
         const subtotal = producto.precio * cantidad;
-        console.log('Agregando producto:', producto.descripcion, 'Subtotal:', subtotal);
+        // Agregando producto al carrito
         
         // Verificar si el producto ya está agregado
         const productoExistente = this.productosAgregados.find(p => p.productoId === productoId);
         if (productoExistente) {
           productoExistente.cantidad += cantidad;
           productoExistente.subtotal = productoExistente.precio * productoExistente.cantidad;
-          console.log('Producto existente actualizado:', productoExistente);
+          // Producto existente actualizado
         } else {
           const nuevoProducto = {
             productoId: producto.id,
@@ -140,7 +140,7 @@ export class FormularioventasComponent implements OnInit {
             subtotal: subtotal
           };
           this.productosAgregados.push(nuevoProducto);
-          console.log('Nuevo producto agregado:', nuevoProducto);
+          // Nuevo producto agregado
         }
         
         // Limpiar el formulario de producto
@@ -172,8 +172,7 @@ export class FormularioventasComponent implements OnInit {
     } else {
       this.totalVenta = 0;
     }
-    console.log('Total actualizado:', this.totalVenta);
-    console.log('Productos agregados:', this.productosAgregados);
+    // Total y productos actualizados
   }
 
   onSubmit(): void {

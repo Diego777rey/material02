@@ -69,6 +69,7 @@ export class FormulariousuarioComponent implements OnInit {
     this.loading = true;
     this.usuarioService.getById(+id).subscribe({
       next: (data) => {
+        // Datos del usuario cargados
         this.formGroup.patchValue(data);
         this.enableForm();
         this.loading = false;
@@ -76,6 +77,8 @@ export class FormulariousuarioComponent implements OnInit {
       error: (err) => {
         console.error('Error al cargar usuario:', err);
         this.loading = false;
+        // Mostrar mensaje de error al usuario
+        alert('Error al cargar los datos del usuario. Por favor, intente nuevamente.');
       }
     });
   }
@@ -101,17 +104,21 @@ export class FormulariousuarioComponent implements OnInit {
     const usuario = new InputUsuario(formValue);
 
     const request = this.isEdit
-      ? this.usuarioService.update(this.route.snapshot.params['id'], usuario)
+      ? this.usuarioService.update(+this.route.snapshot.params['id'], usuario)
       : this.usuarioService.create(usuario);
 
     request.subscribe({
-      next: () => {
+      next: (response) => {
+        // Usuario guardado exitosamente
         this.loading = false;
+        const mensaje = this.isEdit ? 'Usuario actualizado exitosamente' : 'Usuario creado exitosamente';
+        alert(mensaje);
         this.router.navigate(['dashboard/usuario']);
       },
       error: (err) => {
         console.error('Error al guardar usuario:', err);
         this.loading = false;
+        alert('Error al guardar el usuario. Por favor, intente nuevamente.');
       }
     });
   }
@@ -128,6 +135,7 @@ export class FormulariousuarioComponent implements OnInit {
     this.enableForm();
     this.isEdit = false;
     this.titulo = 'Nuevo Usuario';
+    // Formulario habilitado para nuevo usuario
   }
 
   volver(): void {

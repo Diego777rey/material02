@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { VendedorService } from '../../components/vendedor.service';
 import { Vendedor } from '../../components/vendedor';
 import { Subject, takeUntil, catchError, of } from 'rxjs';
@@ -26,7 +27,8 @@ export class FormulariovendedorComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    private vendedorService: VendedorService
+    private vendedorService: VendedorService,
+    private snackBar: MatSnackBar
   ) {
     this.formGroup = this.fb.group({});
   }
@@ -52,13 +54,14 @@ export class FormulariovendedorComponent implements OnInit, OnDestroy {
       { control: 'activo', label: 'Activo', tipo: 'checkbox' }
     ];
 
-    // Crear los FormControls
+    // Crear los FormControls - habilitados si estamos en modo edición
     this.campos.forEach(campo => {
       const validators = campo.requerido ? [Validators.required] : [];
       if (campo.control === 'email') {
         validators.push(Validators.email);
       }
-      this.formGroup.addControl(campo.control, this.fb.control('', validators));
+      const disabled = !this.isEdit; // Habilitar si estamos editando
+      this.formGroup.addControl(campo.control, this.fb.control({value: '', disabled: disabled}, validators));
     });
   }
 
@@ -69,6 +72,7 @@ export class FormulariovendedorComponent implements OnInit, OnDestroy {
       this.vendedorId = Number(id);
       this.loadVendedor(this.vendedorId);
       this.formEnabled = true; // si es edición, habilitamos el formulario
+      this.formGroup.enable();
     }
   }
 
@@ -98,11 +102,13 @@ export class FormulariovendedorComponent implements OnInit, OnDestroy {
   nuevo(): void {
     this.formGroup.reset({ activo: true });
     this.formEnabled = true;
+    this.formGroup.enable();
   }
 
   cancelar(): void {
     this.formGroup.reset();
     this.formEnabled = false;
+    this.formGroup.disable();
   }
 
   volver(): void {
@@ -110,28 +116,101 @@ export class FormulariovendedorComponent implements OnInit, OnDestroy {
   }
 
   guardar(): void {
-    if (this.formGroup.invalid) return;
+    if (this.formGroup.invalid) {
+      console.error('Formulario inválido:', this.formGroup.errors);
+      this.formGroup.markAllAsTouched();
+      this.snackBar.open('Por favor, complete todos los campos obligatorios correctamente', 'Cerrar', {
+        duration: 5000,
+        panelClass: ['error-snackbar']
+      });
+      return;
+    }
 
+    // Validación básica de campos obligatorios
     const formValue = this.formGroup.value;
-    const vendedor = new Vendedor({
-      nombre: formValue.nombre,
-      apellido: formValue.apellido,
-      documento: formValue.documento,
-      telefono: formValue.telefono,
-      email: formValue.email,
-      fechaNacimiento: formValue.fechaNacimiento,
-      activo: formValue.activo
-    });
+    if (!formValue.nombre || formValue.nombre.trim().length === 0) {
+      this.snackBar.open('Error: El nombre es obligatorio', 'Cerrar', {
+        duration: 5000,
+        panelClass: ['error-snackbar']
+      });
+      return;
+    }
 
-    const obs$ = this.isEdit && this.vendedorId
-      ? this.vendedorService.update(this.vendedorId, vendedor)
-      : this.vendedorService.create(vendedor);
+    if (!formValue.apellido || formValue.apellido.trim().length === 0) {
+      this.snackBar.open('Error: El apellido es obligatorio', 'Cerrar', {
+        duration: 5000,
+        panelClass: ['error-snackbar']
+      });
+      return;
+    }
 
-    this.loading = true;
-    obs$.pipe(takeUntil(this.destroy$)).subscribe(() => {
+    if (!formValue.email || formValue.email.trim().length === 0) {
+      this.snackBar.open('Error: El email es obligatorio', 'Cerrar', {
+        duration: 5000,
+        panelClass: ['error-snackbar']
+      });
+      return;
+    }
+
+    try {
+      const vendedor = new Vendedor({
+        nombre: formValue.nombre,
+        apellido: formValue.apellido,
+        documento: formValue.documento,
+        telefono: formValue.telefono,
+        email: formValue.email,
+        fechaNacimiento: formValue.fechaNacimiento,
+        activo: formValue.activo
+      });
+
+      const obs$ = this.isEdit && this.vendedorId
+        ? this.vendedorService.update(this.vendedorId, vendedor)
+        : this.vendedorService.create(vendedor);
+
+      this.loading = true;
+      obs$.pipe(
+        takeUntil(this.destroy$),
+        catchError((error) => {
+          console.error('Error al guardar vendedor:', error);
+          this.loading = false;
+          
+          // Manejar errores específicos
+          let mensajeError = 'Error al guardar el vendedor';
+          
+          if (error.message && error.message.includes('llave duplicada')) {
+            mensajeError = 'Ya existe un vendedor con ese documento o email. Por favor, verifique los datos.';
+          } else if (error.message && error.message.includes('constraint')) {
+            mensajeError = 'Error de validación: Ya existe un vendedor con esos datos.';
+          } else if (error.message) {
+            mensajeError = 'Error al guardar el vendedor: ' + error.message;
+          }
+          
+          this.snackBar.open(mensajeError, 'Cerrar', {
+            duration: 7000,
+            panelClass: ['error-snackbar']
+          });
+          return of(null);
+        })
+      ).subscribe((result) => {
+        if (result) {
+          // Vendedor guardado exitosamente
+          this.loading = false;
+          this.formEnabled = false;
+          this.formGroup.disable();
+          this.snackBar.open('Vendedor guardado exitosamente', 'Cerrar', {
+            duration: 3000,
+            panelClass: ['success-snackbar']
+          });
+          this.router.navigate(['dashboard/vendedor']);
+        }
+      });
+    } catch (error) {
+      console.error('Error al crear el vendedor:', error);
       this.loading = false;
-      this.formEnabled = false;
-     // this.router.navigate(['dashboard/vendedor']);
-    });
+      this.snackBar.open('Error al crear el vendedor: ' + (error as Error).message, 'Cerrar', {
+        duration: 5000,
+        panelClass: ['error-snackbar']
+      });
+    }
   }
 }

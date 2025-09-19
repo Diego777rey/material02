@@ -12,30 +12,16 @@ export class CategoriaService {
   constructor(private apollo: Apollo) {}
 
   getAll() {
-    console.log('CategoriaService: Iniciando consulta de categorías...');
-    
     return this.apollo.watchQuery<{ findAllCategorias: Categoria[] }>({
       query: GET_CATEGORIAS,
       errorPolicy: 'all',
       fetchPolicy: 'cache-first'
     }).valueChanges.pipe(
-      tap((result) => {
-        console.log('CategoriaService: Respuesta completa:', result);
-        console.log('CategoriaService: Datos:', result.data);
-        console.log('CategoriaService: Errores:', result.errors);
-      }),
       map(result => {
-        const categorias = result.data?.findAllCategorias || [];
-        console.log('CategoriaService: Categorías procesadas:', categorias);
-        return categorias;
+        return result.data?.findAllCategorias || [];
       }),
       catchError((error) => {
-        console.error('CategoriaService: Error en consulta:', error);
-        console.error('CategoriaService: Detalles del error:', {
-          message: error.message,
-          networkError: error.networkError,
-          graphQLErrors: error.graphQLErrors
-        });
+        console.error('Error al cargar categorías:', error);
         return throwError(() => error);
       })
     );

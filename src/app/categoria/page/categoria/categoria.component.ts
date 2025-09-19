@@ -113,6 +113,10 @@ export class CategoriaComponent implements OnInit, OnDestroy {
     this.router.navigate(['dashboard/categoria/crear']);
   }
 
+  generarReporte(){
+    this.router.navigate(['dashboard/categoria/generar']);
+  }
+
   editarCategoria(categoria: Categoria){
     if(!categoria.id) return;
     this.router.navigate(['dashboard/categoria/editar', categoria.id]);

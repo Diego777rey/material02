@@ -37,11 +37,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     AppRoutingModule,
     BrowserAnimationsModule,
     RouterModule,//para que funcionen las rutas si o si hay que importar el router module y el ruting module en el approuting
-    AppRoutingModule,
     GraphQLModule,
     HttpClientModule,
     ApolloModule,
-    BrowserAnimationsModule,
     MenuModule,
     FormsModule,
     ReactiveFormsModule,

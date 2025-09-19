@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { VendedorRoutingModule } from './vendedor-routing.module';
 import { VendedorComponent } from './page/vendedor/vendedor.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MenuModule } from "src/app/menu/menu.module";
+// import { MenuModule } from "src/app/menu/menu.module"; // Removido para evitar dependencias circulares
 import { ReutilizacionModule } from 'src/app/reutilizacion/reutilizacion.module';
 
 import { MatCardModule } from '@angular/material/card';
@@ -33,7 +33,7 @@ import { ReporteVendedorComponent } from './page/reportevendedor/reportevendedor
     VendedorRoutingModule,
     FormsModule,
     ReactiveFormsModule,
-    MenuModule,
+    // MenuModule, // Removido para evitar dependencias circulares
     ReutilizacionModule,
     MatCardModule,
     MatFormFieldModule,

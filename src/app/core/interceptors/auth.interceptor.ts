@@ -20,7 +20,7 @@ export class AuthInterceptor implements HttpInterceptor {
         }
       });
       
-      console.log('Token JWT agregado a la petición HTTP:', token);
+      // Token JWT agregado a la petición HTTP
       return next.handle(authReq);
     }
     

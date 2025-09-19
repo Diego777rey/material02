@@ -13,7 +13,6 @@ export function createApollo(httpLink: HttpLink, authService: AuthService): Apol
 
   const authLink = setContext((operation, context) => {
     const token = authService.getToken();
-    console.log('JWT enviado:', token); // para debug
     return {
       headers: {
         Authorization: token ? `Bearer ${token}` : '',
@@ -24,7 +23,6 @@ export function createApollo(httpLink: HttpLink, authService: AuthService): Apol
 
   const errorLink = onError(({ graphQLErrors, networkError }) => {
     if (networkError && (networkError as any).status === 401) {
-      console.error('JWT expirado o inválido. Cerrando sesión...');
       authService.logout();
     }
     if (graphQLErrors) {

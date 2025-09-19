@@ -14,7 +14,7 @@ export const GET_USUARIOS = gql`
 
 export const GET_USUARIO_BY_ID = gql`
   query GetUsuarioById($id: ID!) {
-    findUsuarioById(UsuarioId: $id) {
+    findUsuarioById(id: $id) {
       id
       nombre
       contrasenha

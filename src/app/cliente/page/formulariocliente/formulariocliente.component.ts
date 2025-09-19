@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ClienteService } from '../../components/cliente.service';
 import { Cliente } from '../../components/cliente';
 import { Subject, takeUntil, catchError, of } from 'rxjs';
@@ -26,7 +27,8 @@ export class FormularioclienteComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    private clienteService: ClienteService
+    private clienteService: ClienteService,
+    private snackBar: MatSnackBar
   ) {
     this.formGroup = this.fb.group({});
   }
@@ -52,13 +54,14 @@ export class FormularioclienteComponent implements OnInit, OnDestroy {
       { control: 'activo', label: 'Activo', tipo: 'checkbox' }
     ];
 
-    // Crear los FormControls
+    // Crear los FormControls - habilitados si estamos en modo edición
     this.campos.forEach(campo => {
       const validators = campo.requerido ? [Validators.required] : [];
       if (campo.control === 'email') {
         validators.push(Validators.email);
       }
-      this.formGroup.addControl(campo.control, this.fb.control('', validators));
+      const disabled = !this.isEdit; // Habilitar si estamos editando
+      this.formGroup.addControl(campo.control, this.fb.control({value: '', disabled: disabled}, validators));
     });
   }
 
@@ -69,6 +72,7 @@ export class FormularioclienteComponent implements OnInit, OnDestroy {
       this.clienteId = Number(id);
       this.loadCliente(this.clienteId);
       this.formEnabled = true; // si es edición, habilitamos el formulario
+      this.formGroup.enable();
     }
   }
 
@@ -98,11 +102,13 @@ export class FormularioclienteComponent implements OnInit, OnDestroy {
   nuevo(): void {
     this.formGroup.reset({ activo: true });
     this.formEnabled = true;
+    this.formGroup.enable();
   }
 
   cancelar(): void {
     this.formGroup.reset();
     this.formEnabled = false;
+    this.formGroup.disable();
   }
 
   volver(): void {
@@ -110,28 +116,101 @@ export class FormularioclienteComponent implements OnInit, OnDestroy {
   }
 
   guardar(): void {
-    if (this.formGroup.invalid) return;
+    if (this.formGroup.invalid) {
+      console.error('Formulario inválido:', this.formGroup.errors);
+      this.formGroup.markAllAsTouched();
+      this.snackBar.open('Por favor, complete todos los campos obligatorios correctamente', 'Cerrar', {
+        duration: 5000,
+        panelClass: ['error-snackbar']
+      });
+      return;
+    }
 
+    // Validación básica de campos obligatorios
     const formValue = this.formGroup.value;
-    const cliente: Cliente = {
-      nombre: formValue.nombre,
-      apellido: formValue.apellido,
-      documento: formValue.documento,
-      telefono: formValue.telefono,
-      email: formValue.email,
-      fechaRegistro: formValue.fechaRegistro,
-      activo: formValue.activo
-    };
+    if (!formValue.nombre || formValue.nombre.trim().length === 0) {
+      this.snackBar.open('Error: El nombre es obligatorio', 'Cerrar', {
+        duration: 5000,
+        panelClass: ['error-snackbar']
+      });
+      return;
+    }
 
-    const obs$ = this.isEdit && this.clienteId
-      ? this.clienteService.updateCliente(this.clienteId, cliente)
-      : this.clienteService.createCliente(cliente);
+    if (!formValue.apellido || formValue.apellido.trim().length === 0) {
+      this.snackBar.open('Error: El apellido es obligatorio', 'Cerrar', {
+        duration: 5000,
+        panelClass: ['error-snackbar']
+      });
+      return;
+    }
 
-    this.loading = true;
-    obs$.pipe(takeUntil(this.destroy$)).subscribe(() => {
+    if (!formValue.email || formValue.email.trim().length === 0) {
+      this.snackBar.open('Error: El email es obligatorio', 'Cerrar', {
+        duration: 5000,
+        panelClass: ['error-snackbar']
+      });
+      return;
+    }
+
+    try {
+      const cliente: Cliente = {
+        nombre: formValue.nombre,
+        apellido: formValue.apellido,
+        documento: formValue.documento,
+        telefono: formValue.telefono,
+        email: formValue.email,
+        fechaRegistro: formValue.fechaRegistro,
+        activo: formValue.activo
+      };
+
+      const obs$ = this.isEdit && this.clienteId
+        ? this.clienteService.updateCliente(this.clienteId, cliente)
+        : this.clienteService.createCliente(cliente);
+
+      this.loading = true;
+      obs$.pipe(
+        takeUntil(this.destroy$),
+        catchError((error) => {
+          console.error('Error al guardar cliente:', error);
+          this.loading = false;
+          
+          // Manejar errores específicos
+          let mensajeError = 'Error al guardar el cliente';
+          
+          if (error.message && error.message.includes('llave duplicada')) {
+            mensajeError = 'Ya existe un cliente con ese documento o email. Por favor, verifique los datos.';
+          } else if (error.message && error.message.includes('constraint')) {
+            mensajeError = 'Error de validación: Ya existe un cliente con esos datos.';
+          } else if (error.message) {
+            mensajeError = 'Error al guardar el cliente: ' + error.message;
+          }
+          
+          this.snackBar.open(mensajeError, 'Cerrar', {
+            duration: 7000,
+            panelClass: ['error-snackbar']
+          });
+          return of(null);
+        })
+      ).subscribe((result) => {
+        if (result) {
+          // Cliente guardado exitosamente
+          this.loading = false;
+          this.formEnabled = false;
+          this.formGroup.disable();
+          this.snackBar.open('Cliente guardado exitosamente', 'Cerrar', {
+            duration: 3000,
+            panelClass: ['success-snackbar']
+          });
+          this.router.navigate(['dashboard/clientes']);
+        }
+      });
+    } catch (error) {
+      console.error('Error al crear el cliente:', error);
       this.loading = false;
-      this.formEnabled = false;
-      this.router.navigate(['dashboard/clientes']);
-    });
+      this.snackBar.open('Error al crear el cliente: ' + (error as Error).message, 'Cerrar', {
+        duration: 5000,
+        panelClass: ['error-snackbar']
+      });
+    }
   }
 }

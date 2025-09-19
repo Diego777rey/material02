@@ -58,10 +58,11 @@ export class ProductoFormComponent implements OnInit, OnDestroy {
       { control: 'activo', label: 'Activo', tipo: 'checkbox' }
     ];
 
-    // Crear los FormControls
+    // Crear los FormControls - habilitados si estamos en modo edición
     this.campos.forEach(campo => {
       const validators = campo.requerido ? [Validators.required] : [];
-      this.formGroup.addControl(campo.control, this.fb.control({value: '', disabled: true}, validators));
+      const disabled = !this.isEdit; // Habilitar si estamos editando
+      this.formGroup.addControl(campo.control, this.fb.control({value: '', disabled: disabled}, validators));
     });
   }
 
@@ -78,16 +79,13 @@ export class ProductoFormComponent implements OnInit, OnDestroy {
 
   loadCategories(): void {
     this.loading = true;
-    console.log('Cargando categorías...');
     this.categoriaService.getAll()
       .pipe(takeUntil(this.destroy$), catchError((error) => {
         console.error('Error al cargar categorías:', error);
         return of([]);
       }))
       .subscribe(data => {
-        console.log('Categorías cargadas desde el servicio:', data);
         this.categorias = data || [];
-        console.log('Categorías asignadas al componente:', this.categorias);
         
         // Actualizar opciones del select
         const categoriaCampo = this.campos.find(c => c.control === 'categoriaId');
@@ -96,11 +94,6 @@ export class ProductoFormComponent implements OnInit, OnDestroy {
             value: c.id, 
             label: c.descripcion 
           }));
-          console.log('Opciones del select actualizadas:', categoriaCampo.opciones);
-          console.log('Tipos de valores en opciones:', categoriaCampo.opciones.map(o => ({ 
-            value: o.value, 
-            tipo: typeof o.value 
-          })));
         }
         this.loading = false;
       });
@@ -150,13 +143,16 @@ export class ProductoFormComponent implements OnInit, OnDestroy {
 
   guardar(): void {
     if (this.formGroup.invalid) {
-      console.error('Formulario inválido:', this.formGroup.errors);
+      this.formGroup.markAllAsTouched();
+      this.snackBar.open('Por favor, complete todos los campos obligatorios correctamente', 'Cerrar', {
+        duration: 5000,
+        panelClass: ['error-snackbar']
+      });
       return;
     }
 
     // Verificar si las categorías se han cargado
     if (this.categorias.length === 0) {
-      console.error('No hay categorías cargadas');
       this.snackBar.open('Error: No hay categorías disponibles. Por favor, recarga la página.', 'Cerrar', {
         duration: 5000,
         panelClass: ['error-snackbar']
@@ -173,13 +169,9 @@ export class ProductoFormComponent implements OnInit, OnDestroy {
       });
       return;
     }
-    console.log('Valor del formulario:', formValue);
-    console.log('Categorías disponibles:', this.categorias);
-    console.log('Categoría ID seleccionada:', formValue.categoriaId, 'Tipo:', typeof formValue.categoriaId);
     
     // Verificar que se haya seleccionado una categoría
     if (!formValue.categoriaId) {
-      console.error('No se seleccionó ninguna categoría');
       this.snackBar.open('Error: Debe seleccionar una categoría', 'Cerrar', {
         duration: 5000,
         panelClass: ['error-snackbar']
@@ -187,29 +179,10 @@ export class ProductoFormComponent implements OnInit, OnDestroy {
       return;
     }
     
-    // Intentar búsqueda con diferentes tipos de comparación
-    let categoriaSeleccionada = this.categorias.find(c => c.id === Number(formValue.categoriaId));
-    
-    // Si no se encuentra con Number(), intentar con string
-    if (!categoriaSeleccionada) {
-      categoriaSeleccionada = this.categorias.find(c => String(c.id) === String(formValue.categoriaId));
-    }
-    
-    // Si aún no se encuentra, intentar comparación directa
-    if (!categoriaSeleccionada) {
-      categoriaSeleccionada = this.categorias.find(c => c.id == formValue.categoriaId); // == permite conversión de tipos
-    }
-    
-    console.log('Categoría encontrada:', categoriaSeleccionada);
+    // Buscar la categoría seleccionada
+    const categoriaSeleccionada = this.categorias.find(c => c.id == formValue.categoriaId);
     
     if (!categoriaSeleccionada) {
-      console.error('No se encontró la categoría seleccionada');
-      console.error('ID buscado:', formValue.categoriaId, 'Tipo:', typeof formValue.categoriaId);
-      console.error('IDs disponibles:', this.categorias.map(c => ({ 
-        id: c.id, 
-        descripcion: c.descripcion, 
-        tipoId: typeof c.id 
-      })));
       this.snackBar.open('Error: No se encontró la categoría seleccionada', 'Cerrar', {
         duration: 5000,
         panelClass: ['error-snackbar']
@@ -228,7 +201,6 @@ export class ProductoFormComponent implements OnInit, OnDestroy {
       });
 
       const productoDto = producto.toDto();
-      console.log('Enviando producto:', productoDto);
 
       const obs$ = this.isEdit && this.productoId
         ? this.productoService.update(this.productoId, productoDto)
@@ -260,7 +232,6 @@ export class ProductoFormComponent implements OnInit, OnDestroy {
         })
       ).subscribe((result) => {
         if (result) {
-          console.log('Producto guardado exitosamente:', result);
           this.loading = false;
           this.formEnabled = false;
           this.snackBar.open('Producto guardado exitosamente', 'Cerrar', {

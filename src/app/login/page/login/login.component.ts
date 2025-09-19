@@ -43,13 +43,7 @@ export class LoginComponent implements OnInit {
     const nombre = this.usuarioForm.value.nombre ?? '';
     const contrasenha = this.usuarioForm.value.contrasenha ?? '';
 
-    console.log('Intentando login con:', { nombre, contrasenha: '***' });
-    console.log('Formulario completo:', this.usuarioForm.value);
-    console.log('Nombre específico:', this.usuarioForm.get('nombre')?.value);
-    console.log('¿Nombre válido?', this.usuarioForm.get('nombre')?.valid);
-    console.log('¿Formulario válido?', this.usuarioForm.valid);
-
-    console.log('Enviando datos de login:', { nombre, contrasenha: '***' });
+    // Intentando login
     
     this.apollo.mutate({
       mutation: LOGIN_USUARIO,
@@ -62,7 +56,7 @@ export class LoginComponent implements OnInit {
       errorPolicy: 'all'
     }).subscribe({
       next: (result: any) => {
-        console.log('Respuesta completa del login:', result);
+        // Respuesta del login recibida
 
         if (result.errors && result.errors.length > 0) {
           console.error('Errores GraphQL:', result.errors);
@@ -73,14 +67,14 @@ export class LoginComponent implements OnInit {
 
         const loginResult = result.data?.login;
         if (loginResult && loginResult.token) {
-          console.log('Login exitoso', loginResult);
+          // Login exitoso
           // Guardar token JWT y datos del usuario en AuthService
           const token = loginResult.token;
           const usuario = loginResult.usuario;
           this.authService.login(token, usuario);
           this.router.navigateByUrl(this.returnUrl);
         } else {
-          console.log('Login fallido - no hay datos de usuario');
+          // Login fallido - no hay datos de usuario
           alert('Usuario o contraseña incorrecta. Verifica las credenciales.');
         }
       },
