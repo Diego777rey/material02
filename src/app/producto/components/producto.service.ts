@@ -51,7 +51,17 @@ export class ProductoService {
       mutation: CREATE_PRODUCTO,
       variables: { input: producto }
     }).pipe(
-      map((result: any) => result.data.createProducto)
+      map((result: any) => {
+        if (result.errors) {
+          console.error('GraphQL errors:', result.errors);
+          throw new Error(result.errors[0]?.message || 'Error al crear producto');
+        }
+        return result.data.createProducto;
+      }),
+      catchError((err: any) => {
+        console.error('Error creating producto:', err);
+        return throwError(() => err);
+      })
     );
   }
 
@@ -60,7 +70,17 @@ export class ProductoService {
       mutation: UPDATE_PRODUCTO,
       variables: { id, input: producto }
     }).pipe(
-      map((result: any) => result.data.updateProducto)
+      map((result: any) => {
+        if (result.errors) {
+          console.error('GraphQL errors:', result.errors);
+          throw new Error(result.errors[0]?.message || 'Error al actualizar producto');
+        }
+        return result.data.updateProducto;
+      }),
+      catchError((err: any) => {
+        console.error('Error updating producto:', err);
+        return throwError(() => err);
+      })
     );
   }
 

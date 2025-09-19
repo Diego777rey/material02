@@ -51,8 +51,7 @@ const routes: Routes = [
       },
       {
         path: 'ventas',
-        loadChildren: () => import('./venta/ventas.module').then(m => m.VentasModule),
-        canActivate: [AdminGuard]
+        loadChildren: () => import('./venta/ventas.module').then(m => m.VentasModule)
       }
     ]
   },

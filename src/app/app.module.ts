@@ -9,6 +9,7 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { GraphQLModule } from './graphql.module';
 import { ApolloModule } from 'apollo-angular';
 import { MenuModule } from './menu/menu.module';
+import { AuthInterceptor } from './core/interceptors/auth.interceptor';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatListModule } from '@angular/material/list';
@@ -62,12 +63,12 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     
   ],
   providers:  [
-    // AuthInterceptor comentado - GraphQL maneja su propia autenticación
-    // {
-    //   provide: HTTP_INTERCEPTORS,
-    //   useClass: AuthInterceptor,
-    //   multi: true
-    // }
+    // Interceptor para agregar token JWT a peticiones HTTP regulares
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true
+    }
   ],
   bootstrap: [AppComponent]
 })

@@ -48,4 +48,62 @@ export class AuthService {
     const usuario = this.getUsuario();
     return usuario && usuario.rol === 'ADMIN';
   }
+
+  // Obtiene el avatar según el rol del usuario
+  getAvatarByRole(): string {
+    const usuario = this.getUsuario();
+    if (!usuario || !usuario.rol) {
+      return 'person'; // Avatar por defecto
+    }
+
+    const rol = usuario.rol.toUpperCase();
+    
+    switch (rol) {
+      case 'ADMIN':
+        return 'admin_panel_settings';
+      case 'USER':
+        return 'person';
+      case 'VENDEDOR':
+        return 'storefront';
+      case 'CLIENTE':
+        return 'shopping_cart';
+      case 'GERENTE':
+        return 'supervisor_account';
+      case 'EMPLEADO':
+        return 'badge';
+      case 'EDITOR':
+        return 'edit';
+      default:
+        return 'person';
+    }
+  }
+
+  // Obtiene el color del avatar según el rol
+  getAvatarColorByRole(): string {
+    const usuario = this.getUsuario();
+    if (!usuario || !usuario.rol) {
+      return 'primary';
+    }
+
+    const rol = usuario.rol.toUpperCase();
+    
+    switch (rol) {
+      case 'ADMIN':
+        return 'primary'; // Azul para admin
+      case 'USER':
+        return 'primary'; // Azul para usuario
+      case 'VENDEDOR':
+        return 'accent'; // Verde para vendedor
+      case 'CLIENTE':
+        return 'primary'; // Azul para cliente
+      case 'GERENTE':
+        return 'warn'; // Rojo para gerente
+      case 'EMPLEADO':
+        return 'accent'; // Verde para empleado
+      case 'EDITOR':
+        return 'primary'; // Azul para editor
+      default:
+        return 'primary';
+    }
+  }
 }

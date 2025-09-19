@@ -74,4 +74,32 @@ mat-nav-list {
   margin-right: 8px;       // opcional, separa del texto
 }
 
+// Estilos para avatares dinámicos
+.user-avatar {
+  transition: all 0.3s ease;
+  
+  &:hover {
+    transform: scale(1.1);
+  }
+}
+
+// Estilos para el diálogo de usuario
+.user-dialog-avatar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 0;
+  
+  mat-icon {
+    font-size: 48px;
+    width: 48px;
+    height: 48px;
+    transition: transform 0.3s ease;
+    
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
+}
+
 

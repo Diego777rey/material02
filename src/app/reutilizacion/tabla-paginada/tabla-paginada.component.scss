@@ -26,6 +26,34 @@
       background-color: #333030; // filas oscuras
     }
 
+    // Efecto hover para filas activas (verde)
+    tr.fila-activa:hover {
+      background-color: #2e7d32 !important; // verde oscuro al pasar el mouse
+      transition: background-color 0.2s ease; // transición suave
+    }
+
+    tr.fila-activa:hover td:not(.mat-column-acciones) {
+      background-color: #2e7d32 !important; // verde oscuro en las celdas (excepto acciones)
+      color: #fff !important; // texto blanco para contraste
+    }
+
+    // Efecto hover para filas inactivas (rojo)
+    tr.fila-inactiva:hover {
+      background-color: #d32f2f !important; // rojo oscuro al pasar el mouse
+      transition: background-color 0.2s ease; // transición suave
+    }
+
+    tr.fila-inactiva:hover td:not(.mat-column-acciones) {
+      background-color: #d32f2f !important; // rojo oscuro en las celdas (excepto acciones)
+      color: #fff !important; // texto blanco para contraste
+    }
+
+    // Mantener color original en columna de acciones durante hover
+    tr:hover td.mat-column-acciones {
+      background-color: #333030 !important; // mantener color original
+      color: #fff !important; // texto blanco
+    }
+
     // Columna de acciones con ancho fijo
     .mat-column-acciones {
       width: 120px;

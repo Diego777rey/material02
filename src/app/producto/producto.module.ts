@@ -12,6 +12,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSelectModule } from '@angular/material/select';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 import { ProductoRoutingModule } from './producto-routing.module';
 import { ReutilizacionModule } from '../reutilizacion/reutilizacion.module';
@@ -34,6 +35,7 @@ import { ProductoFormComponent } from './page/formularioproducto/formularioprodu
     MatSelectModule,
     MatPaginatorModule,
     MatProgressSpinnerModule,
+    MatSnackBarModule,
     ReutilizacionModule,
     ProductoRoutingModule
   ]

@@ -14,13 +14,17 @@ import { TablaPaginadaComponent } from './tabla-paginada/tabla-paginada.componen
 import { AccionesComponent } from './acciones/acciones.component';
 import { FormularioGenericoComponent } from './formulario-generico/formulario-generico.component';
 import { MatSelectModule } from '@angular/material/select';
+import { UsuariodialogComponent } from './usuariodialog/usuariodialog.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatMenuModule } from '@angular/material/menu';
 
 @NgModule({
   declarations: [
     BuscadorComponent,
     TablaPaginadaComponent,
     AccionesComponent,
-    FormularioGenericoComponent
+    FormularioGenericoComponent,
+    UsuariodialogComponent
   ],
   imports: [
     CommonModule,
@@ -35,6 +39,8 @@ import { MatSelectModule } from '@angular/material/select';
     MatIconModule,
     MatOptionModule,
     MatSelectModule,
+    MatDialogModule,
+    MatMenuModule,
   ],
   exports: [
     BuscadorComponent,

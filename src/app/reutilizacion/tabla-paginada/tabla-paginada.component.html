@@ -37,6 +37,7 @@
             {{ elemento[columna] ? 'Activo' : 'Inactivo' }}
           </span>
           <!-- Mostrar campos normales -->
+          <!-- se va a mostrar solo si la codicion se cumple -->
           <span *ngIf="columna !== 'categoria' && columna !== 'cliente' && columna !== 'vendedor' && columna !== 'fecha' && columna !== 'total' && columna !== 'subtotal' && columna !== 'activo'">
             {{ elemento[columna] }}
           </span>
@@ -59,7 +60,8 @@
 
     <!-- Filas de encabezado y datos -->
     <tr mat-header-row *matHeaderRowDef="columnasVisibles"></tr>
-    <tr mat-row *matRowDef="let row; columns: columnasVisibles;"></tr>
+    <tr mat-row *matRowDef="let row; columns: columnasVisibles;" 
+        [class]="row.activo === false ? 'fila-inactiva' : 'fila-activa'"></tr>
 
   </table>
 
