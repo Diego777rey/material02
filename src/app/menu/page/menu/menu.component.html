@@ -8,7 +8,7 @@
     </div>
 
     <mat-nav-list>
-      <mat-list-item>
+      <mat-list-item *ngIf="isAdmin">
         <img src="assets/img/usuarios.png" alt="Usuarios" class="icono-nav">
         <span class="nav-text" routerLink="/dashboard/usuario" routerLinkActive="active">Usuarios</span>
       </mat-list-item>
@@ -28,7 +28,7 @@
         <img src="assets/img/producto.png" alt="Usuarios" class="icono-nav">
         <span class="nav-text" routerLink="/dashboard/producto" routerLinkActive="active">Productos</span>
       </mat-list-item>
-      <mat-list-item>
+      <mat-list-item *ngIf="isAdmin">
         <img src="assets/img/venta.png" alt="Usuarios" class="icono-nav">
         <span class="nav-text" routerLink="/dashboard/ventas" routerLinkActive="active">Ventas</span>
       </mat-list-item>

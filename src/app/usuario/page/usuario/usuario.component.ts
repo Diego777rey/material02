@@ -24,13 +24,15 @@ export class UsuarioComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
 
   columnas: string[] = [
-    'id', 'nombre', 'contrasenha', 'acciones'
+    'id', 'nombre', 'contrasenha','email', 'rol', 'acciones'
   ];
 
   nombresColumnas: { [key: string]: string } = {
     id: 'Código',
     nombre: 'Nombre',
     contrasenha: 'Contraseña',
+    email: 'Email',
+    rol: 'Rol',
     acciones: 'Acciones'
   };
 

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../../core/guards/auth.service';
 import { Router } from '@angular/router';
 
@@ -7,12 +7,20 @@ import { Router } from '@angular/router';
   templateUrl: './menu.component.html',
   styleUrls: ['./menu.component.scss']
 })
-export class MenuComponent {
+export class MenuComponent implements OnInit {
   //title = 'Dashboard';
   showToggle = true;
   selectedDate: Date | null = null;
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(public authService: AuthService, private router: Router) {}
+
+  ngOnInit(): void {
+    // Componente inicializado
+  }
+
+  get isAdmin(): boolean {
+    return this.authService.isAdmin();
+  }
 
   onToggleChanged(event: any) {
     this.showToggle = event.checked;

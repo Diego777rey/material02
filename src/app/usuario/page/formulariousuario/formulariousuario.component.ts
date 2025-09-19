@@ -45,8 +45,10 @@ export class FormulariousuarioComponent implements OnInit {
 
   private initForm(): void {
     this.formGroup = this.fb.group({
-      nombre: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100)]],
-      contrasenha: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100)]]
+      nombre: [{value: '', disabled: true}, [Validators.required, Validators.minLength(2), Validators.maxLength(100)]],
+      contrasenha: [{value: '', disabled: true}, [Validators.required, Validators.minLength(2), Validators.maxLength(100)]],
+      email: [{value: '', disabled: true}, [Validators.required, Validators.email]],
+      rol: [{value: '', disabled: true}, [Validators.required]]
     });
   }
 
@@ -68,7 +70,7 @@ export class FormulariousuarioComponent implements OnInit {
     this.usuarioService.getById(+id).subscribe({
       next: (data) => {
         this.formGroup.patchValue(data);
-        this.formEnabled = true;
+        this.enableForm();
         this.loading = false;
       },
       error: (err) => {
@@ -76,6 +78,16 @@ export class FormulariousuarioComponent implements OnInit {
         this.loading = false;
       }
     });
+  }
+
+  private enableForm(): void {
+    this.formEnabled = true;
+    this.formGroup.enable();
+  }
+
+  private disableForm(): void {
+    this.formEnabled = false;
+    this.formGroup.disable();
   }
 
   guardar(): void {
@@ -106,14 +118,14 @@ export class FormulariousuarioComponent implements OnInit {
 
   cancelar(): void {
     this.formGroup.reset();
-    this.formEnabled = false;
+    this.disableForm();
     this.isEdit = false;
     this.titulo = 'Nuevo Usuario';
   }
 
   nuevo(): void {
     this.formGroup.reset();
-    this.formEnabled = true;
+    this.enableForm();
     this.isEdit = false;
     this.titulo = 'Nuevo Usuario';
   }

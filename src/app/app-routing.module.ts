@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes, PreloadAllModules } from '@angular/router';
 import { MenuComponent } from './menu/page/menu/menu.component';
 import { AuthGuard } from './core/guards/auth.guard';
+import { AdminGuard } from './core/guards/admin.guard';
 
 const routes: Routes = [
   // Ruta pública
@@ -33,7 +34,8 @@ const routes: Routes = [
       },
       {
         path: 'usuario',
-        loadChildren: () => import('./usuario/usuario.module').then(m => m.UsuarioModule)
+        loadChildren: () => import('./usuario/usuario.module').then(m => m.UsuarioModule),
+        canActivate: [AdminGuard]
       },
       {
         path: 'categoria',
@@ -49,7 +51,8 @@ const routes: Routes = [
       },
       {
         path: 'ventas',
-        loadChildren: () => import('./venta/ventas.module').then(m => m.VentasModule)
+        loadChildren: () => import('./venta/ventas.module').then(m => m.VentasModule),
+        canActivate: [AdminGuard]
       }
     ]
   },

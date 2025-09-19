@@ -42,4 +42,10 @@ export class AuthService {
     const data = localStorage.getItem(this.USER_KEY);
     return data ? JSON.parse(data) : null;
   }
+
+  // Verifica si el usuario actual es administrador
+  isAdmin(): boolean {
+    const usuario = this.getUsuario();
+    return usuario && usuario.rol === 'ADMIN';
+  }
 }
